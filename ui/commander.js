@@ -41,6 +41,8 @@ function login_submit() {
     localStorage.setItem("loginPassword", loginPassword)
     localStorage.setItem("loginEndpoint", loginEndpoint)
     window.alert("Handler for .click() called.");
+
+    // TODO: test API hit and dismiss only if successful
 }
 
 function login_clear() {
@@ -51,6 +53,7 @@ function login_clear() {
 }
 
 function prepare_login() {
+    $("#loginModal").modal(keyboard=false)
     login_setup()
     $("#loginButton").click(login_submit)
     $("#loginClear").click(login_clear)

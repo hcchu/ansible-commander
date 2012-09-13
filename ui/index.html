@@ -34,22 +34,20 @@
 
     <div class="container">
 
-      <div class="hero-unit">
-        <h1>Login</h1>
-        <p>
-            <form>
-              <p><input id='loginUser' type="text" placeholder="Username"></p>
-              <p><input id='loginPassword' type="password" placeholder="Password"></p>
-              <p><input id='loginEndpoint' type="text" placeholder="Endpoint"></p>
-            </form>
-        </p>
-        <p>
-           <a class="btn btn-primary btn-large" id='loginButton'>Submit</a>
-           <a class="btn btn-primary btn-large" id='loginClear'>Clear</a>
-        </p>
-      </div>
-
-      <hr>
+        <div id='loginModal' class="modal hide fade">
+            <div class="modal-header">
+                <h3>Ansible Commander Login</h3>
+            </div>
+            <div class="modal-body">
+                <p><input id='loginUser' type="text" placeholder="Username"></p>
+                <p><input id='loginPassword' type="password" placeholder="Password"></p>
+                <p><input id='loginEndpoint' type="text" placeholder="Endpoint"></p>
+            </div>
+            <div class="modal-footer">
+                <a id='loginClear' href="#" class="btn">Clear</a>
+                <a id='loginSubmit' href="#" class="btn btn-primary">Submit</a>
+            </div>
+        </div>
 
       <footer>
         <p>&copy; Michael DeHaan, 2012</p>
