@@ -20,6 +20,37 @@ $(document).ready(function() {
     prepare_login()
 })
 
+
+function api_call(url_segment, on_success) {
+    url = localStorage.getItem('loginEndpoint') + url_segment;
+    alert(url)
+    username = localStorage.getItem('loginUser')
+    password = localStorage.getItem('loginPassword')
+    alert(username)
+    alert(password)
+    up = username + ":" + password
+    up = Base64.encode(up)
+    alert(up)
+
+    $.ajax({
+        url : url,
+        crossDomain: true,
+        dataType : 'json',
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader("Authentication", "Basic " + up);
+        },
+        error : function(xhr, ajaxOptions, thrownError) {
+            alert("TE " + thrownError)
+            alert("AO " + ajaxOptions)
+            alert("API call failed: " + xhr.status + "," + xhr.statusText)
+            alert("RT " + + xhr.responseText)
+        },
+        success : function(model) {
+            on_success(model)
+        }
+    });
+}
+
 function login_setup() {
     loginUser = localStorage.getItem("loginUser");
     if ((loginUser == '') || (loginUser == null)) {
@@ -43,6 +74,10 @@ function login_submit() {
     window.alert("Handler for .click() called.");
 
     // TODO: test API hit and dismiss only if successful
+    api_call('/api/', function(model) {
+        alert('ok')
+        // $('#loginModal').modal('hide')
+    })
 }
 
 function login_clear() {
@@ -55,7 +90,7 @@ function login_clear() {
 function prepare_login() {
     $("#loginModal").modal(keyboard=false)
     login_setup()
-    $("#loginButton").click(login_submit)
+    $("#loginSubmit").click(login_submit)
     $("#loginClear").click(login_clear)
 }
 

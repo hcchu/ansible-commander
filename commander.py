@@ -23,7 +23,7 @@ DEBUG=True
 DEFAULT_USER='admin'
 DEFAULT_PASS='gateisdown'
 
-
+import os
 import flask
 from flask import request
 import json
@@ -33,9 +33,11 @@ from acom import data as acom_data
 from acom.types.users import Users
 from acom.types.inventory import Hosts, Groups
 
-
 app = flask.Flask(__name__)
 random.seed()
+
+def log(msg):
+    os.system("logger -t acom %s" % msg)    
 
 def jdata():
     try:
@@ -45,6 +47,8 @@ def jdata():
 
 def check_auth(username, password):
     u = Users()
+    # TEMPORARY DEBUG ONLY
+    log("checking auth: %s, %s" % (username, password))
     all = u.list(internal=True)
     if len(all) == 0 and (username == DEFAULT_USER and password == DEFAULT_PASS):
         u.add(dict(name=DEFAULT_USER, _password=DEFAULT_PASS))
@@ -91,6 +95,7 @@ def returns_json(f):
 @app.route('/api/', methods=['GET'])
 @returns_json
 def hello_world():
+    log("api called")
     return dict(
         rest_resources = dict(
             users  = dict(href='/api/users/', fields=Users().FIELDS),
