@@ -21,32 +21,27 @@ $(document).ready(function() {
 })
 
 
-function api_call(url_segment, on_success) {
-    url = localStorage.getItem('loginEndpoint') + url_segment;
-    alert(url)
+function api_call(url, method, on_success) {
     username = localStorage.getItem('loginUser')
     password = localStorage.getItem('loginPassword')
-    alert(username)
-    alert(password)
     up = username + ":" + password
     up = Base64.encode(up)
-    alert(up)
 
     $.ajax({
         url : url,
         crossDomain: true,
+        async: false,
         dataType : 'json',
+        type: method,
         beforeSend : function(xhr) {
-            xhr.setRequestHeader("Authentication", "Basic " + up);
+            xhr.setRequestHeader("Authorization", "Basic " + up);
+            return true
         },
         error : function(xhr, ajaxOptions, thrownError) {
-            alert("TE " + thrownError)
-            alert("AO " + ajaxOptions)
-            alert("API call failed: " + xhr.status + "," + xhr.statusText)
-            alert("RT " + + xhr.responseText)
+            alert("failed")
         },
-        success : function(model) {
-            on_success(model)
+        success : function(data, status, xhr) {
+            on_success(data)
         }
     });
 }
@@ -56,27 +51,19 @@ function login_setup() {
     if ((loginUser == '') || (loginUser == null)) {
         loginUser = 'admin'
     }
-    loginEndpoint = localStorage.getItem("loginEndpoint");
-    if ((loginEndpoint == '') || (loginEndpoint == null)) {
-        loginEndpoint = 'http://commander:5000/';
-    }
     $('#loginUser').val(loginUser)
-    $('#loginEndpoint').val(loginEndpoint)
 }
 
 function login_submit() {
     loginUser     = $('#loginUser').val()
     loginPassword = $('#loginPassword').val()
-    loginEndpoint = $('#loginEndpoint').val()
     localStorage.setItem("loginUser", loginUser)
     localStorage.setItem("loginPassword", loginPassword)
-    localStorage.setItem("loginEndpoint", loginEndpoint)
-    window.alert("Handler for .click() called.");
 
     // TODO: test API hit and dismiss only if successful
-    api_call('/api/', function(model) {
-        alert('ok')
-        // $('#loginModal').modal('hide')
+    api_call('/api/', 'GET', function(data) {
+        // alert(data)
+        $('#loginModal').modal('hide')
     })
 }
 
@@ -87,9 +74,20 @@ function login_clear() {
      $('#loginPassword').val('')
 }
 
+function set_on_enter(id, cb) {
+    $(id).keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+            cb()
+        }
+    })
+}
+
 function prepare_login() {
     $("#loginModal").modal(keyboard=false)
     login_setup()
+    set_on_enter("#loginUser", login_submit)
+    set_on_enter("#loginPassword", login_submit)
     $("#loginSubmit").click(login_submit)
     $("#loginClear").click(login_clear)
 }

@@ -33,7 +33,7 @@ from acom import data as acom_data
 from acom.types.users import Users
 from acom.types.inventory import Hosts, Groups
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__) # static_url_path=os.path.join(os.getcwd(),'ui'))
 random.seed()
 
 def log(msg):
@@ -47,18 +47,22 @@ def jdata():
 
 def check_auth(username, password):
     u = Users()
-    # TEMPORARY DEBUG ONLY
-    log("checking auth: %s, %s" % (username, password))
     all = u.list(internal=True)
     if len(all) == 0 and (username == DEFAULT_USER and password == DEFAULT_PASS):
         u.add(dict(name=DEFAULT_USER, _password=DEFAULT_PASS))
         return True
-    return u.login(username, password)
+    if not u.login(username, password):
+        log("login failed: %s" % (username))
+        return False
+    else:
+        log("login successful: %s" % (username))
+    return True
 
 def authenticate(msg='Authenticate'):
     message = dict(message=msg)
     resp = flask.jsonify(message)
-    resp.status_code = 401
+    # while it's technically wrong, returning 403 vs 401 such that browser popups don't occur
+    resp.status_code = 403
     resp.headers['WWW-Authenticate'] = 'Basic realm="Ansible Commander"'
     return resp
 
@@ -75,7 +79,10 @@ def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = flask.request.authorization
+        if auth:
+            log("DEBUG ONLY, u=%s p=%s" % (auth.username, auth.password))
         if not auth: 
+            log("DEBUG missing auth tokens")
             return authenticate()
         elif not check_auth(auth.username, auth.password):
             return authenticate("Authentication Failed.")
@@ -92,7 +99,12 @@ def returns_json(f):
             flask.abort(404)
     return decorated
 
+@app.route('/', methods=['GET'])
+def return_index():
+    return flask.redirect('static/index.html')
+
 @app.route('/api/', methods=['GET'])
+@requires_auth
 @returns_json
 def hello_world():
     log("api called")
