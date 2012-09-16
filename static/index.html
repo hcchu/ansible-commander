@@ -55,7 +55,6 @@
         </div>
 
 
-
  <div class="container">
 
     <!-- Docs nav
@@ -78,8 +77,7 @@
 
         <ul class="nav nav-tabs nav-stacked bs-docs-sidenav">
 
-
-          <li><a id='usersNav' href="#usersNav" class='active'><i class="icon-chevron-right"></i>Users</a></li>
+          <li><a id='usersNav' href="#usersNav"><i class="icon-chevron-right"></i>Users</a></li>
           <li><a id='groupsNav' href="#groupsNav"><i class="icon-chevron-right"></i>Groups</a></li>
           <li><a id='hostsNav' href="#hostsNav"><i class="icon-chevron-right"></i>Hosts</a></li>
           <li><a id='logoutNav' href="#logoutNav"><i class="icon-chevron-right"></i>Logout</a></li>
@@ -89,11 +87,15 @@
       <!-- work area -->
       <div class="span9">
 
-          <ul>
-              <li ng-repeat="item in items | filter:query">
-                   {{item.name}} - {{item.edit_linkage}} - {{item.delete_linkage}}
-              </li>
-          </ul>
+          <h2><div id='whatMode'></div></h2>
+
+          <table class="table table-striped">
+              <tr ng-repeat="item in items | filter:query">
+                  <td>{{item.name}}</td>
+                  <td><a href='#' onClick='click_edit_id({{item.id}})'><span class="label label-warning">Edit</span></a>
+                  &nbsp;<a href='#' onClick='click_delete_id({{item.id}})'><span class="label label-important">Delete</span></a></td>
+              </tr>
+          </table>
       </div>
 
 

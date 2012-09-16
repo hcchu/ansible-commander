@@ -18,13 +18,12 @@
 
 $(document).ready(function() {
     prepare_login()
-    set_nav_callbacks()
 })
 
 function listerController($scope) {
     $scope.items = [
-        { name: "alpha", edit_linkage: '1234',  delete_linkage: '12345' },
-        { name: "beta",  edit_linkage: '12346', delete_linkage: '12347' }
+        { name: "alpha", id: 1, edit_linkage: '1234',  delete_linkage: '12345' },
+        { name: "beta",  id: 2, edit_linkage: '12346', delete_linkage: '12347' }
     ];
 }
 
@@ -71,6 +70,7 @@ function login_submit() {
     api_call('/api/', 'GET', function(data) {
         // alert(data)
         $('#loginModal').modal('hide')
+        set_nav_callbacks()
     })
 }
 
@@ -104,23 +104,37 @@ function set_nav_callbacks() {
     $('#logoutNav').click(function() {
         logout();
     })
+    load_users();
 }
 
 function load_groups() {
-    alert('groups');
+    $('#whatMode').text('Groups')
+    window.app_context = 'groups'
 }
 
-function load_user() {
-    alert('users');
+function load_users() {
+    $('#whatMode').text('Users')
+    window.app_context = 'users'
 }
 
 function load_hosts() {
-    alert('hosts');
+    $('#whatMode').text('Hosts')
+    window.app_context = 'hosts'
 }
 
 function logout() {
     login_clear();
     $("#loginModal").modal(keyboard=false);
+}
+
+function click_edit_id(id) {
+    // TODO: spawn the appropriate view_or_edit modal, don't actually edit in this function
+    alert("imagine editing a " + window.app_context + " with ID " + id)
+}
+
+function click_delete_id(id) {
+    // TODO: spawn the delete confirmation modal, don't actually edit in this function
+    alert("imagine deleting a " + window.app_context + " with ID " + id)
 }
 
 function prepare_login() {
