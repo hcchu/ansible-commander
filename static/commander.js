@@ -18,6 +18,7 @@
 
 $(document).ready(function() {
     prepare_login()
+    set_nav_callbacks()
 })
 
 
@@ -81,6 +82,39 @@ function set_on_enter(id, cb) {
             cb()
         }
     })
+}
+
+function set_nav_callbacks() {
+
+    $('#groupsNav').click(function() {
+        load_groups();
+    })
+    $('#usersNav').click(function() {
+        load_users();
+    })
+    $('#hostsNav').click(function() {
+        load_hosts();
+    })
+    $('#logoutNav').click(function() {
+        logout();
+    })
+}
+
+function load_groups() {
+    alert('groups');
+}
+
+function load_user() {
+    alert('users');
+}
+
+function load_hosts() {
+    alert('hosts');
+}
+
+function logout() {
+    login_clear();
+    $("#loginModal").modal(keyboard=false);
 }
 
 function prepare_login() {
