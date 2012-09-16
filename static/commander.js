@@ -21,6 +21,12 @@ $(document).ready(function() {
     set_nav_callbacks()
 })
 
+function listerController($scope) {
+    $scope.items = [
+        { name: "alpha", edit_linkage: '1234',  delete_linkage: '12345' },
+        { name: "beta",  edit_linkage: '12346', delete_linkage: '12347' }
+    ];
+}
 
 function api_call(url, method, on_success) {
     username = localStorage.getItem('loginUser')
